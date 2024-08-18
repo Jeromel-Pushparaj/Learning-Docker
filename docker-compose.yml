@@ -1,0 +1,29 @@
+services:
+  db:
+    image: mysql:8.0
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: example
+
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8080:8080
+    links:
+      - db
+  
+  photogram:
+    build: "photogram/."
+    restart: always
+    ports:
+      - 80:80
+    volumes:
+      - userdata:/root
+      - ./photogram/first_app:/var/www/html
+    links:
+      - adminer
+      - db
+
+volumes:
+  userdata:
